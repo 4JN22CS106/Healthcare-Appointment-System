@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Healthcare Appointment System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"/>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      background: #f4f6f8;
+    }
+    header {
+      background-color: #2e7d32;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .dashboard {
+      display: flex;
+      flex-direction: row;
+      padding: 2rem;
+      gap: 2rem;
+    }
+    .main {
+      flex: 2;
+    }
+    .sidebar {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h2, h3 {
+      color: #2e7d32;
+      margin-top: 0;
+    }
+    label {
+      display: block;
+      margin: 1rem 0 0.5rem;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.75rem 1.5rem;
+      background-color: #2e7d32;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #1b5e20;
+    }
+    #viewProfileBtn {
+      background-color: #ffffff;
+      color: #2e7d32;
+      border: 2px solid #2e7d32;
+      margin-bottom: 0;
+      font-weight: bold;
+    }
+    #viewProfileBtn:hover {
+      background-color: #e8f5e9;
+    }
+    .profile, .reminder-block {
+      background-color: #ffffff;
+      border-left: 4px solid #2e7d32;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .reminder-item {
+      background-color: #e8f5e9;
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+    @media (max-width: 768px) {
+      .dashboard {
+        flex-direction: column;
+      }
+      .sidebar {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Healthcare Appointment System</h1>
+  </header>
+
+  <div class="dashboard">
+    <div class="main">
+      <div class="container">
+        <h2>Book an Appointment</h2>
+        <form id="appointmentForm">
+          <label for="name">Patient Name</label>
+          <input type="text" id="name" required />
+
+          <label for="email">Email</label>
+          <input type="email" id="email" required />
+
+          <label for="age">Age</label>
+          <input type="number" id="age" required />
+
+          <label for="doctor">Select Doctor</label>
+          <select id="doctor" required>
+            <option value="">--Choose--</option>
+            <option value="Dr. Karan">Dr. Karan(Cardiologist)</option>
+            <option value="Dr. Jones">Dr. Jones (Dermatologist)</option>
+            <option value="Dr. Kiran">Dr. Kiran (Physiotherapist)</option>
+          </select>
+
+          <label for="date">Appointment Date</label>
+          <input type="date" id="date" required />
+
+          <label for="time">Appointment Time</label>
+          <input type="time" id="time" required />
+
+          <button type="submit">Schedule Appointment</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <button id="viewProfileBtn" onclick="toggleProfile()">👤 View Profile</button>
+
+      <div class="profile" id="profileCard" style="display: none;">
+        <h3>👤 Patient Profile</h3>
+        <p><strong>Name:</strong> <span id="profileName"></span></p>
+        <p><strong>Email:</strong> <span id="profileEmail"></span></p>
+        <p><strong>Age:</strong> <span id="profileAge"></span></p>
+      </div>
+
+      <div class="reminder-block" id="reminderBlock">
+        <h3>📅 Appointment Reminders</h3>
+        <div id="reminderList"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleProfile() {
+      const profileCard = document.getElementById('profileCard');
+      profileCard.style.display = profileCard.style.display === 'none' ? 'block' : 'none';
+    }
+
+    document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const age = document.getElementById('age').value;
+      const doctor = document.getElementById('doctor').value;
+      const date = document.getElementById('date').value;
+      const time = document.getElementById('time').value;
+
+      document.getElementById('profileName').textContent = name;
+      document.getElementById('profileEmail').textContent = email;
+      document.getElementById('profileAge').textContent = age;
+
+      const appointmentDateTime = new Date(`${date}T${time}`);
+      const reminderTime = new Date(appointmentDateTime.getTime() - 24 * 60 * 60 * 1000);
+      const reminderText = `✅ ${name} with ${doctor} on ${date} at ${time}. Reminder: ${reminderTime.toLocaleString()}`;
+
+      const reminderItem = document.createElement('div');
+      reminderItem.className = 'reminder-item';
+      reminderItem.textContent = reminderText;
+      document.getElementById('reminderList').appendChild(reminderItem);
+    });
+  </script>
+</body>
+</html>
